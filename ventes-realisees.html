@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventes Réalisées - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Découvrez les ventes réalisées par OZ Truck Trailer TP/BTP : matériel TP, remorques, poids lourds livrés à nos clients.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Ventes Réalisées</span>
+        </div>
+        <h1>Ventes <span>Réalisées</span></h1>
+        <p>Retrouvez ici les matériels livrés à nos clients satisfaits. Des références qui témoignent de notre expertise.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-number" id="totalSales">0</div>
+        <div class="stat-label">Ventes publiées</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="500" data-suffix="+">500+</div>
+        <div class="stat-label">Ventes totales</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="15" data-suffix="+">15+</div>
+        <div class="stat-label">Années d'expérience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="100" data-suffix="%">100%</div>
+        <div class="stat-label">Clients satisfaits</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Filters -->
+      <div class="filters-bar">
+        <button class="filter-btn active" data-filter="all">Toutes</button>
+        <button class="filter-btn" data-filter="Matériel TP">Matériel TP</button>
+        <button class="filter-btn" data-filter="Remorques">Remorques</button>
+        <button class="filter-btn" data-filter="Poids Lourds">Poids Lourds</button>
+        <button class="filter-btn" data-filter="Autres">Autres</button>
+      </div>
+
+      <div class="sales-grid" id="salesGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Vous aussi, rejoignez nos clients satisfaits !</h2>
+      <p>Contactez-nous pour trouver le matériel idéal pour vos projets.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <a href="produits/tous-nos-produits.html" class="btn btn-outline btn-lg"><i class="fas fa-search"></i> Voir nos produits</a>
+        <a href="contact.html" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.6)"><i class="fas fa-envelope"></i> Nous contacter</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let allSales = OZT.getPublishedSales().sort((a, b) => new Date(b.date) - new Date(a.date));
+      document.getElementById('totalSales').textContent = allSales.length;
+
+      function renderSales(filter) {
+        const grid = document.getElementById('salesGrid');
+        const filtered = filter === 'all' ? allSales : allSales.filter(s => s.category === filter);
+
+        if (!filtered.length) {
+          grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-truck"></i><h3>Aucune vente dans cette catégorie</h3></div>';
+          return;
+        }
+
+        grid.innerHTML = filtered.map(s => `
+          <div class="sale-card fade-in-up" onclick="window.location.href='detail/index.html?id=${s.id}&type=sale'">
+            <div class="sale-card-img">
+              <img src="${s.image || ''}" alt="${s.title}" loading="lazy" onerror="this.parentElement.style.background='#222'">
+              <span class="sale-badge">Vendu</span>
+            </div>
+            <div class="sale-card-body">
+              <h3>${s.title}</h3>
+              <p>${s.description || ''}</p>
+            </div>
+            <div class="sale-card-footer">
+              <span style="font-size:0.8rem;color:#888;background:rgba(196,30,46,0.1);padding:3px 10px;border-radius:12px;border:1px solid rgba(196,30,46,0.2)">${s.category || ''}</span>
+              <span style="font-size:0.8rem;color:#888">${formatDate(s.date)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderSales('all');
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderSales(this.dataset.filter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

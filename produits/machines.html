@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machines - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Vente de machines et équipements spéciaux. OZ Truck Trailer à Châteaubriant (44).">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="tous-nos-produits.html">Produits</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Machines</span>
+        </div>
+        <h1>Nos <span>Machines</span></h1>
+        <p>Équipements spéciaux, compacteurs, foreuses et autres machines de chantier.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="products-grid" id="productsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Vous recherchez une machine spécifique ?</h2>
+      <p>Contactez-nous pour toute demande de matériel spécialisé.</p>
+      <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-envelope"></i> Nous contacter</a>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const products = OZT.getPublishedProducts().filter(p => p.category === 'machines');
+      loadProductsGrid('productsGrid', products);
+    });
+  </script>
+</body>
+</html>

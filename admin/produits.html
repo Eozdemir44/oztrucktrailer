@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion Produits - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link active"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Gestion des Produits</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Nouveau produit</button>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-boxes"></i> Liste des Produits (<span id="productCount">0</span>)</div>
+          </div>
+          <div class="admin-card-body" style="padding-bottom:0">
+            <div class="admin-filters">
+              <div class="admin-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher un produit..." id="searchInput" oninput="filterProducts()">
+              </div>
+              <select class="admin-select" id="categoryFilter" onchange="filterProducts()">
+                <option value="">Toutes catégories</option>
+                <option value="remorques">Remorques</option>
+                <option value="materiel-tp">Matériel TP</option>
+                <option value="poids-lourds">Poids Lourds</option>
+                <option value="machines">Machines</option>
+                <option value="occasions">Occasions</option>
+                <option value="pieces-detachees">Pièces Détachées</option>
+              </select>
+              <select class="admin-select" id="statusFilter" onchange="filterProducts()">
+                <option value="">Tous statuts</option>
+                <option value="published">Publiés</option>
+                <option value="hidden">Masqués</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Nom</th>
+                  <th>Marque</th>
+                  <th>Catégorie</th>
+                  <th>Prix</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal" style="max-width:800px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Nouveau Produit</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="productId">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Nom du produit *</label>
+            <input type="text" class="form-control" id="productName" placeholder="Ex: HMK 220LC" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Marque</label>
+            <input type="text" class="form-control" id="productBrand" placeholder="Ex: Hidromek">
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Catégorie *</label>
+            <select class="form-control" id="productCategory">
+              <option value="remorques">Remorques & Semi-Remorques</option>
+              <option value="materiel-tp">Matériel TP</option>
+              <option value="poids-lourds">Poids Lourds & Utilitaires</option>
+              <option value="machines">Machines</option>
+              <option value="occasions">Occasions</option>
+              <option value="pieces-detachees">Pièces Détachées</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sous-catégorie</label>
+            <input type="text" class="form-control" id="productSubCategory" placeholder="Ex: pelle-chenille">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="productDescription" rows="3" placeholder="Description du produit..."></textarea>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Prix (€) — laisser vide si sur devis</label>
+            <input type="number" class="form-control" id="productPrice" placeholder="Ex: 45000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Libellé prix</label>
+            <input type="text" class="form-control" id="productPriceLabel" placeholder="Ex: Sur devis" value="Sur devis">
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div class="form-group">
+          <label class="form-label">Images (URL ou upload)</label>
+          <div id="imageUrlsContainer">
+            <div class="specs-input-group" id="imgUrl_0">
+              <input type="text" class="form-control" placeholder="URL de l'image (https://...)" id="imgUrl_0_input">
+              <button type="button" class="btn btn-danger btn-icon" onclick="removeImgUrl(0)"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button type="button" class="add-spec-btn" onclick="addImgUrl()" style="margin-top:8px"><i class="fas fa-plus"></i> Ajouter une URL d'image</button>
+          <div class="form-hint">Collez des URLs d'images valides (Unsplash, etc.) ou uploadez via le bouton ci-dessous.</div>
+        </div>
+
+        <!-- Upload -->
+        <div class="form-group">
+          <label class="form-label">Upload images (base64)</label>
+          <div class="img-upload-area" id="imgUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Glissez des images ici ou <span>cliquez pour sélectionner</span></p>
+            <input type="file" id="imgUploadInput" accept="image/*" multiple style="display:none">
+          </div>
+          <div class="img-preview-list" id="imgPreviewList"></div>
+        </div>
+
+        <!-- Specs -->
+        <div class="form-group">
+          <label class="form-label">Caractéristiques techniques</label>
+          <div id="specsManager"></div>
+        </div>
+
+        <div class="form-group">
+          <div class="toggle-group">
+            <label class="toggle">
+              <input type="checkbox" id="productPublished" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Publier ce produit</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close">Annuler</button>
+        <button class="btn btn-primary" onclick="saveProduct()"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    let imgUrlCount = 1;
+
+    function addImgUrl() {
+      const container = document.getElementById('imageUrlsContainer');
+      const id = imgUrlCount++;
+      const div = document.createElement('div');
+      div.className = 'specs-input-group';
+      div.id = 'imgUrl_' + id;
+      div.innerHTML = `
+        <input type="text" class="form-control img-url-input" placeholder="URL de l'image (https://...)" id="imgUrl_${id}_input">
+        <button type="button" class="btn btn-danger btn-icon" onclick="removeImgUrl(${id})"><i class="fas fa-times"></i></button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removeImgUrl(id) {
+      const el = document.getElementById('imgUrl_' + id);
+      if (el) el.remove();
+    }
+
+    function getImageUrls() {
+      const urls = [];
+      document.querySelectorAll('.img-url-input').forEach(inp => {
+        if (inp.value.trim()) urls.push(inp.value.trim());
+      });
+      return urls;
+    }
+
+    function setImageUrls(images) {
+      const container = document.getElementById('imageUrlsContainer');
+      container.innerHTML = '';
+      imgUrlCount = 0;
+      (images || ['']).forEach((url, i) => {
+        const div = document.createElement('div');
+        div.className = 'specs-input-group';
+        div.id = 'imgUrl_' + imgUrlCount;
+        div.innerHTML = `
+          <input type="text" class="form-control img-url-input" placeholder="URL de l'image" id="imgUrl_${imgUrlCount}_input" value="${url || ''}">
+          <button type="button" class="btn btn-danger btn-icon" onclick="removeImgUrl(${imgUrlCount})"><i class="fas fa-times"></i></button>
+        `;
+        container.appendChild(div);
+        imgUrlCount++;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderTable();
+      initImageUpload('imgUploadArea', 'imgUploadInput', 'imgPreviewList');
+      initSpecsManager('specsManager');
+
+      // Check for #new hash
+      if (window.location.hash === '#new') openProductModal();
+    });
+
+    function renderTable(products) {
+      const all = products || OZT.getProducts();
+      document.getElementById('productCount').textContent = all.length;
+      const tbody = document.getElementById('productsTable');
+      if (!all.length) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-boxes"></i><p>Aucun produit. Cliquez sur "Nouveau produit" pour commencer.</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = all.map(p => `
+        <tr>
+          <td>
+            ${p.images && p.images[0]
+              ? `<img src="${p.images[0]}" class="product-thumb" alt="${p.name}" onerror="this.style.display='none'">`
+              : `<div style="width:50px;height:40px;background:#222;border-radius:6px;display:flex;align-items:center;justify-content:center"><i class="fas fa-image" style="color:#444"></i></div>`
+            }
+          </td>
+          <td style="font-weight:600;color:#fff;max-width:200px" class="truncate">${p.name}</td>
+          <td style="color:#888">${p.brand || '-'}</td>
+          <td><span class="badge badge-info">${p.category || '-'}</span></td>
+          <td style="color:#C41E2E;font-weight:600">${p.price ? p.price + ' €' : (p.priceLabel || 'Sur devis')}</td>
+          <td>
+            <div class="toggle-group">
+              <label class="toggle" title="${p.published ? 'Masquer' : 'Publier'}">
+                <input type="checkbox" ${p.published ? 'checked' : ''} onchange="togglePublished('${p.id}', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="badge ${p.published ? 'badge-success' : 'badge-secondary'}">${p.published ? 'Publié' : 'Masqué'}</span>
+            </div>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="btn btn-warning btn-icon" onclick="editProduct('${p.id}')" title="Modifier"><i class="fas fa-edit"></i></button>
+              <a href="../detail/index.html?id=${p.id}&type=product" target="_blank" class="btn btn-secondary btn-icon" title="Voir"><i class="fas fa-eye"></i></a>
+              <button class="btn btn-danger btn-icon" onclick="deleteProduct('${p.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterProducts() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      let products = OZT.getProducts();
+      if (q) products = products.filter(p => p.name.toLowerCase().includes(q) || (p.brand||'').toLowerCase().includes(q));
+      if (cat) products = products.filter(p => p.category === cat);
+      if (status === 'published') products = products.filter(p => p.published);
+      if (status === 'hidden') products = products.filter(p => !p.published);
+      renderTable(products);
+    }
+
+    function openProductModal(product) {
+      document.getElementById('modalTitle').textContent = product ? 'Modifier le produit' : 'Nouveau produit';
+      document.getElementById('productId').value = product ? product.id : '';
+      document.getElementById('productName').value = product ? product.name : '';
+      document.getElementById('productBrand').value = product ? (product.brand || '') : '';
+      document.getElementById('productCategory').value = product ? product.category : 'remorques';
+      document.getElementById('productSubCategory').value = product ? (product.subCategory || '') : '';
+      document.getElementById('productDescription').value = product ? (product.description || '') : '';
+      document.getElementById('productPrice').value = product ? (product.price || '') : '';
+      document.getElementById('productPriceLabel').value = product ? (product.priceLabel || 'Sur devis') : 'Sur devis';
+      document.getElementById('productPublished').checked = product ? !!product.published : true;
+      setImageUrls(product ? product.images : ['']);
+      setSpecsInManager('specsManager', product ? product.specs : {});
+      document.getElementById('imgPreviewList').innerHTML = '';
+      openModal('productModal');
+    }
+
+    function editProduct(id) {
+      const p = OZT.getProductById(id);
+      if (p) openProductModal(p);
+    }
+
+    function saveProduct() {
+      const name = document.getElementById('productName').value.trim();
+      if (!name) { adminToast('Le nom du produit est requis.', 'error'); return; }
+
+      const id = document.getElementById('productId').value || OZT.genId('prod');
+      const urlImages = getImageUrls();
+      const uploadImages = getImagesFromPreview('imgPreviewList');
+      const allImages = [...urlImages, ...uploadImages].filter(Boolean);
+
+      const product = {
+        id,
+        name,
+        brand: document.getElementById('productBrand').value.trim(),
+        category: document.getElementById('productCategory').value,
+        subCategory: document.getElementById('productSubCategory').value.trim(),
+        description: document.getElementById('productDescription').value.trim(),
+        price: document.getElementById('productPrice').value ? parseFloat(document.getElementById('productPrice').value) : null,
+        priceLabel: document.getElementById('productPriceLabel').value.trim() || 'Sur devis',
+        images: allImages,
+        specs: getSpecsFromManager('specsManager'),
+        published: document.getElementById('productPublished').checked,
+        createdAt: new Date().toISOString().slice(0, 10)
+      };
+
+      const products = OZT.getProducts();
+      const existingIdx = products.findIndex(p => p.id === id);
+      if (existingIdx >= 0) products[existingIdx] = product;
+      else products.push(product);
+      OZT.saveProducts(products);
+
+      closeModal('productModal');
+      renderTable();
+      adminToast(existingIdx >= 0 ? 'Produit modifié avec succès !' : 'Produit ajouté avec succès !', 'success');
+    }
+
+    function togglePublished(id, published) {
+      const products = OZT.getProducts();
+      const p = products.find(p => p.id === id);
+      if (p) {
+        p.published = published;
+        OZT.saveProducts(products);
+        adminToast(published ? 'Produit publié.' : 'Produit masqué.', 'success');
+        renderTable();
+      }
+    }
+
+    function deleteProduct(id) {
+      adminConfirm('Supprimer ce produit définitivement ?', function () {
+        const products = OZT.getProducts().filter(p => p.id !== id);
+        OZT.saveProducts(products);
+        renderTable();
+        adminToast('Produit supprimé.', 'success');
+      });
+    }
+  </script>
+</body>
+</html>

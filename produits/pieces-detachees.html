@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pièces Détachées - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Pièces détachées pour remorques, matériel TP et poids lourds. Stock important de pièces d'origine et compatibles. OZ Truck Trailer Châteaubriant.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="tous-nos-produits.html">Produits</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Pièces Détachées</span>
+        </div>
+        <h1>Pièces <span>Détachées</span></h1>
+        <p>Large stock de pièces d'origine et compatibles pour vos remorques, matériels TP et poids lourds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories info -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag"><i class="fas fa-cogs"></i> Notre stock</div>
+        <h2 class="section-title">Pièces Disponibles <span>en Stock</span></h2>
+        <p class="section-subtitle">Nous disposons d'un large stock de pièces pour une livraison rapide.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-truck-loading"></i></div>
+          <h3>Pièces Remorques</h3>
+          <p>Essieux, freins, suspensions, bâches, ridelles, vérins hydrauliques, attelages et accessoires.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-hard-hat"></i></div>
+          <h3>Pièces Engins TP</h3>
+          <p>Godets, dents, adaptateurs, joints, filtres, chenilles, galets et pièces d'usure Hidromek/Eurocomach.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-truck"></i></div>
+          <h3>Pièces Poids Lourds</h3>
+          <p>Filtres, courroies, plaquettes de frein, amortisseurs et pièces mécaniques toutes marques.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-bolt"></i></div>
+          <h3>Pièces Électriques</h3>
+          <p>Câblages, feux, connecteurs, batteries, alternateurs et démarreurs pour tous vos équipements.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="products-grid" id="productsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact for parts -->
+  <section class="section section-dark" style="padding-top:0">
+    <div class="container">
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-left:4px solid #C41E2E;border-radius:12px;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+        <div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px;"><i class="fas fa-info-circle" style="color:#C41E2E;margin-right:8px"></i>Pièce non trouvée ?</h3>
+          <p style="color:#888;font-size:0.9rem">Contactez-nous avec la référence de votre pièce. Nous la trouverons pour vous.</p>
+        </div>
+        <a href="../contact.html" class="btn btn-primary"><i class="fas fa-search"></i> Demander une pièce</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Commande de pièces express</h2>
+      <p>Appelez-nous directement pour une disponibilité et un devis immédiat.</p>
+      <a href="tel:0244051090" class="btn btn-outline btn-lg"><i class="fas fa-phone"></i> 02 44 05 10 90</a>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const products = OZT.getPublishedProducts().filter(p => p.category === 'pieces-detachees');
+      loadProductsGrid('productsGrid', products);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link active"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Statistiques</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="header-btn" onclick="resetAnalytics()"><i class="fas fa-trash-alt"></i> Réinitialiser</button>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Global stats -->
+        <div class="admin-stats" style="margin-bottom:28px">
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-eye"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalVisits">0</div>
+              <div class="stat-label-admin">Visites totales</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-calendar-day"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="todayVisits">0</div>
+              <div class="stat-label-admin">Aujourd'hui</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-calendar-week"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="weekVisits">0</div>
+              <div class="stat-label-admin">Cette semaine</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-file-alt"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalPages">0</div>
+              <div class="stat-label-admin">Pages trackées</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart 30 days -->
+        <div class="admin-card" style="margin-bottom:24px">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-chart-line"></i> Visites — 30 derniers jours</div>
+          </div>
+          <div class="admin-card-body">
+            <div id="chart30days" style="min-height:220px"></div>
+          </div>
+        </div>
+
+        <!-- Two columns -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <!-- Top pages -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title"><i class="fas fa-trophy"></i> Pages les plus visitées</div>
+            </div>
+            <div class="admin-card-body" style="padding:0">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Page</th>
+                    <th>Visites</th>
+                    <th>%</th>
+                  </tr>
+                </thead>
+                <tbody id="topPagesTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Content stats -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title"><i class="fas fa-database"></i> Contenu du site</div>
+            </div>
+            <div class="admin-card-body">
+              <div id="contentStats" style="display:flex;flex-direction:column;gap:16px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All pages -->
+        <div class="admin-card" style="margin-top:24px">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-list"></i> Toutes les pages</div>
+          </div>
+          <div class="admin-card-body" style="padding:0">
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Page</th>
+                    <th>Visites</th>
+                    <th>Barre</th>
+                  </tr>
+                </thead>
+                <tbody id="allPagesTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      loadStats();
+    });
+
+    function loadStats() {
+      const analytics = OZTAnalytics.getAll();
+      const total = OZTAnalytics.getTotal();
+      const today = new Date().toISOString().slice(0, 10);
+      const todayCount = analytics['__date__' + today] || 0;
+
+      // Week count
+      let weekCount = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        weekCount += analytics['__date__' + d.toISOString().slice(0, 10)] || 0;
+      }
+
+      const pageViews = OZTAnalytics.getPageViews();
+      const pageCount = Object.keys(pageViews).length;
+
+      document.getElementById('totalVisits').textContent = total.toLocaleString('fr-FR');
+      document.getElementById('todayVisits').textContent = todayCount;
+      document.getElementById('weekVisits').textContent = weekCount;
+      document.getElementById('totalPages').textContent = pageCount;
+
+      // Chart
+      renderVisitsChart('chart30days');
+
+      // Top pages
+      const topPages = OZTAnalytics.getTopPages(10);
+      const topTable = document.getElementById('topPagesTable');
+      if (!topPages.length) {
+        topTable.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#555;padding:20px">Aucune donnée disponible</td></tr>';
+      } else {
+        topTable.innerHTML = topPages.map((p, i) => `
+          <tr>
+            <td style="color:#888;font-size:0.82rem">${i + 1}</td>
+            <td style="color:#fff;font-size:0.83rem;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.page}</td>
+            <td style="color:#C41E2E;font-weight:700">${p.views}</td>
+            <td style="color:#888;font-size:0.8rem">${total ? Math.round(p.views / total * 100) : 0}%</td>
+          </tr>
+        `).join('');
+      }
+
+      // Content stats
+      const products = OZT.getProducts();
+      const news = OZT.getNews();
+      const sales = OZT.getSales();
+      const medias = OZT.getMedias();
+
+      document.getElementById('contentStats').innerHTML = [
+        { label: 'Produits', total: products.length, published: products.filter(p=>p.published).length, icon: 'fas fa-boxes', color: '#007bff' },
+        { label: 'Actualités', total: news.length, published: news.filter(n=>n.published).length, icon: 'fas fa-newspaper', color: '#ffc107' },
+        { label: 'Ventes', total: sales.length, published: sales.filter(s=>s.published).length, icon: 'fas fa-check-circle', color: '#28a745' },
+        { label: 'Médias', total: medias.length, published: medias.filter(m=>m.published).length, icon: 'fas fa-images', color: '#fd7e14' }
+      ].map(item => `
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:40px;height:40px;background:${item.color}22;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="${item.icon}" style="color:${item.color}"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:0.85rem;font-weight:600;color:#fff">${item.label}</span>
+              <span style="font-size:0.82rem;color:#888">${item.published}/${item.total} publiés</span>
+            </div>
+            <div style="height:6px;background:#222;border-radius:3px;overflow:hidden">
+              <div style="height:100%;background:${item.color};border-radius:3px;width:${item.total ? Math.round(item.published/item.total*100) : 0}%;transition:width 0.5s ease"></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // All pages table
+      const allPages = Object.entries(pageViews).sort((a,b) => b[1]-a[1]);
+      const allTable = document.getElementById('allPagesTable');
+      const maxV = allPages.length ? allPages[0][1] : 1;
+      if (!allPages.length) {
+        allTable.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#555;padding:20px">Aucune donnée de visite</td></tr>';
+      } else {
+        allTable.innerHTML = allPages.map(([page, views]) => `
+          <tr>
+            <td style="color:#aaa;font-size:0.83rem">${page}</td>
+            <td style="color:#C41E2E;font-weight:700;width:60px">${views}</td>
+            <td style="width:200px">
+              <div style="height:6px;background:#222;border-radius:3px;overflow:hidden">
+                <div style="height:100%;background:#C41E2E;border-radius:3px;width:${Math.round(views/maxV*100)}%"></div>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function resetAnalytics() {
+      adminConfirm('Réinitialiser toutes les statistiques de visites ?', function () {
+        OZTAnalytics.reset();
+        loadStats();
+        adminToast('Statistiques réinitialisées.', 'success');
+      });
+    }
+  </script>
+</body>
+</html>

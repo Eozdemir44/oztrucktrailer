@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actualités - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Actualités et nouveautés OZ Truck Trailer TP/BTP : nouveaux produits, partenariats, événements.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Actualités</span>
+        </div>
+        <h1>Actualités &amp; <span>Nouveautés</span></h1>
+        <p>Restez informé de toutes nos nouveautés, partenariats et événements.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="news-grid" id="newsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Une question sur nos actualités ?</h2>
+      <p>Contactez-nous pour plus d'informations sur nos dernières offres et nouveautés.</p>
+      <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-envelope"></i> Nous contacter</a>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const news = OZT.getPublishedNews().sort((a, b) => new Date(b.date) - new Date(a.date));
+      const grid = document.getElementById('newsGrid');
+      if (!news.length) {
+        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-newspaper"></i><h3>Aucune actualité disponible</h3><p>Revenez bientôt pour nos prochaines publications.</p></div>';
+        return;
+      }
+      grid.innerHTML = news.map(n => `
+        <div class="news-card fade-in-up" onclick="window.location.href='../detail/index.html?id=${n.id}&type=news'">
+          <div class="news-card-img">
+            <img src="${n.image || ''}" alt="${n.title}" loading="lazy" onerror="this.parentElement.style.background='#1a1a1a'">
+          </div>
+          <div class="news-card-body">
+            <div class="news-date">${formatDate(n.date)}</div>
+            <h3>${n.title}</h3>
+            <p>${n.excerpt || ''}</p>
+            <div style="margin-top:14px">
+              <span class="btn btn-primary btn-sm"><i class="fas fa-arrow-right"></i> Lire la suite</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

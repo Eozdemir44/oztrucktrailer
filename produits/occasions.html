@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Occasions - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Matériels d'occasion contrôlés et garantis : remorques, matériel TP, poids lourds. OZ Truck Trailer à Châteaubriant (44).">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="tous-nos-produits.html">Produits</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Occasions</span>
+        </div>
+        <h1>Matériels <span>Occasion</span></h1>
+        <p>Matériels d'occasion soigneusement contrôlés et garantis à prix compétitifs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guarantees -->
+  <div style="background:#1a1a1a;border-bottom:1px solid #2a2a2a;padding:20px 0;">
+    <div class="container">
+      <div style="display:flex;gap:30px;flex-wrap:wrap;align-items:center;justify-content:center">
+        <div style="display:flex;align-items:center;gap:10px">
+          <i class="fas fa-check-circle" style="color:#28a745;font-size:1.2rem"></i>
+          <span style="font-size:0.88rem;font-weight:600;color:#ccc">Contrôle technique</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <i class="fas fa-check-circle" style="color:#28a745;font-size:1.2rem"></i>
+          <span style="font-size:0.88rem;font-weight:600;color:#ccc">Garantie mécanique</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <i class="fas fa-check-circle" style="color:#28a745;font-size:1.2rem"></i>
+          <span style="font-size:0.88rem;font-weight:600;color:#ccc">Photos réelles</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <i class="fas fa-check-circle" style="color:#28a745;font-size:1.2rem"></i>
+          <span style="font-size:0.88rem;font-weight:600;color:#ccc">Prix négociables</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="products-grid" id="productsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Vous vendez votre matériel ?</h2>
+      <p>Nous rachetons également vos matériels d'occasion. Contactez-nous pour une estimation gratuite.</p>
+      <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-handshake"></i> Proposer un matériel</a>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const products = OZT.getPublishedProducts().filter(p => p.category === 'occasions');
+      loadProductsGrid('productsGrid', products);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poids Lourds & Utilitaires - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Vente de poids lourds, utilitaires et véhicules. OZ Truck Trailer à Châteaubriant (44).">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="tous-nos-produits.html">Produits</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Poids Lourds & Utilitaires</span>
+        </div>
+        <h1>Poids Lourds, Utilitaires <span>&amp; Véhicules</span></h1>
+        <p>Tracteurs routiers, camions benne, fourgons et utilitaires de toutes catégories.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="filters-bar">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="poids-lourds">Poids-Lourds</button>
+        <button class="filter-btn" data-filter="utilitaires">Utilitaires</button>
+        <button class="filter-btn" data-filter="vehicules">Véhicules</button>
+        <button class="filter-btn" data-filter="autres">Autres</button>
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Vous ne trouvez pas ce que vous cherchez ?</h2>
+      <p>Contactez-nous, nous pouvons rechercher le véhicule adapté à vos besoins.</p>
+      <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-phone"></i> Nous contacter</a>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const sub = params.get('sub');
+      let products = OZT.getPublishedProducts().filter(p => p.category === 'poids-lourds');
+
+      function renderGrid(filter) {
+        const filtered = filter && filter !== 'all' ? products.filter(p => p.subCategory === filter) : products;
+        loadProductsGrid('productsGrid', filtered);
+      }
+
+      renderGrid(sub);
+
+      if (sub) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.filter === sub) btn.classList.add('active');
+        });
+      }
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderGrid(this.dataset.filter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

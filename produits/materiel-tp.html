@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matériel TP - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Matériel de travaux publics : pelles hydrauliques, mini-pelles, tractopelles Hidromek et Eurocomach. Distributeur agréé à Châteaubriant.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="tous-nos-produits.html">Produits</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Matériel TP</span>
+        </div>
+        <h1>Matériel De <span>TP</span></h1>
+        <p>Distributeur officiel Hidromek &amp; Eurocomach. Pelles hydrauliques, mini-pelles, tractopelles et chargeuses.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brands banner -->
+  <div style="background:#1a1a1a;border-bottom:1px solid #2a2a2a;padding:20px 0;">
+    <div class="container" style="display:flex;align-items:center;gap:30px;flex-wrap:wrap">
+      <span style="font-size:0.8rem;font-weight:700;text-transform:uppercase;color:#888;letter-spacing:1px;">Nos marques :</span>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="background:#222;border:1px solid #333;border-radius:8px;padding:10px 20px;font-size:1rem;font-weight:800;color:#C41E2E;letter-spacing:1px;">HIDROMEK</div>
+        <div style="background:#222;border:1px solid #333;border-radius:8px;padding:10px 20px;font-size:1rem;font-weight:800;color:#fff;letter-spacing:1px;">EUROCOMACH</div>
+        <div style="background:#C41E2E;border-radius:8px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-certificate" style="margin-right:6px"></i>Distributeur Agréé</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="filters-bar">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="pelle-pneu">Pelle À Pneu</button>
+        <button class="filter-btn" data-filter="pelle-chenille">Pelle À Chenille</button>
+        <button class="filter-btn" data-filter="tractopelle">Tractopelle</button>
+        <button class="filter-btn" data-filter="mini-pelle">Mini-Pelle</button>
+        <button class="filter-btn" data-filter="chargeuse">Chargeuse</button>
+        <button class="filter-btn" data-filter="chariot-telescopique">Chariot Télescopique</button>
+        <button class="filter-btn" data-filter="autres">Autres</button>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag"><i class="fas fa-star"></i> Pourquoi Hidromek</div>
+        <h2 class="section-title">L'Excellence <span>Hidromek</span></h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-cog"></i></div>
+          <h3>Technologie avancée</h3>
+          <p>Systèmes hydrauliques de dernière génération pour une productivité maximale sur vos chantiers.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-leaf"></i></div>
+          <h3>Normes Stage V</h3>
+          <p>Moteurs conformes aux normes d'émissions européennes Stage V pour un impact environnemental réduit.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-tools"></i></div>
+          <h3>SAV & Pièces</h3>
+          <p>Service après-vente agréé et stock de pièces d'origine pour une maintenance rapide et efficace.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Garantie constructeur</h3>
+          <p>Garantie complète constructeur sur tous nos matériels neufs Hidromek et Eurocomach.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Demandez une démonstration</h2>
+      <p>Nous organisons des démonstrations de nos matériels sur site ou sur votre chantier.</p>
+      <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-calendar-alt"></i> Planifier une démo</a>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const sub = params.get('sub');
+      let products = OZT.getPublishedProducts().filter(p => p.category === 'materiel-tp');
+
+      function renderGrid(filter) {
+        const filtered = filter && filter !== 'all' ? products.filter(p => p.subCategory === filter) : products;
+        loadProductsGrid('productsGrid', filtered);
+      }
+
+      renderGrid(sub);
+
+      if (sub) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.filter === sub) btn.classList.add('active');
+        });
+      }
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderGrid(this.dataset.filter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paramètres - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link active"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Paramètres</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="settings-grid">
+          <!-- Settings nav -->
+          <div class="settings-nav">
+            <div class="settings-nav-link active" data-panel="hero"><i class="fas fa-images"></i> Images Hero</div>
+            <div class="settings-nav-link" data-panel="texts"><i class="fas fa-align-left"></i> Textes du site</div>
+            <div class="settings-nav-link" data-panel="about"><i class="fas fa-building"></i> Page À Propos</div>
+            <div class="settings-nav-link" data-panel="social"><i class="fas fa-share-alt"></i> Réseaux Sociaux</div>
+            <div class="settings-nav-link" data-panel="password"><i class="fas fa-lock"></i> Mot de passe</div>
+            <div class="settings-nav-link" data-panel="data"><i class="fas fa-database"></i> Données</div>
+          </div>
+
+          <!-- Panels -->
+          <div>
+            <!-- Hero Images -->
+            <div class="settings-panel active" id="panel-hero">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-images"></i> Images du Slider Hero</div>
+                </div>
+                <div class="admin-card-body">
+                  <p style="color:#888;font-size:0.87rem;margin-bottom:20px">Gérez les images et le contenu de chaque slide du slider principal de la page d'accueil.</p>
+                  <div id="heroSlidesManager"></div>
+                  <button type="button" class="add-spec-btn" onclick="addHeroSlide()" style="margin-top:12px"><i class="fas fa-plus"></i> Ajouter un slide</button>
+                  <div style="margin-top:20px">
+                    <button class="btn btn-primary" onclick="saveHeroSettings()"><i class="fas fa-save"></i> Enregistrer les slides</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Texts -->
+            <div class="settings-panel" id="panel-texts">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-align-left"></i> Textes Page d'Accueil</div>
+                </div>
+                <div class="admin-card-body">
+                  <div class="form-group">
+                    <label class="form-label">Titre de la section intro</label>
+                    <input type="text" class="form-control" id="homeIntroTitle" placeholder="Titre principal de la section intro">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Texte de la section intro</label>
+                    <textarea class="form-control" id="homeIntroText" rows="4" placeholder="Texte principal de présentation..."></textarea>
+                  </div>
+                  <button class="btn btn-primary" onclick="saveTexts()"><i class="fas fa-save"></i> Enregistrer</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- About -->
+            <div class="settings-panel" id="panel-about">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-building"></i> Textes Page À Propos</div>
+                </div>
+                <div class="admin-card-body">
+                  <div class="form-group">
+                    <label class="form-label">Paragraphe 1</label>
+                    <textarea class="form-control" id="aboutText" rows="4" placeholder="Premier paragraphe de présentation..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Paragraphe 2</label>
+                    <textarea class="form-control" id="aboutText2" rows="4" placeholder="Deuxième paragraphe..."></textarea>
+                  </div>
+                  <button class="btn btn-primary" onclick="saveAbout()"><i class="fas fa-save"></i> Enregistrer</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social -->
+            <div class="settings-panel" id="panel-social">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-share-alt"></i> Liens Réseaux Sociaux</div>
+                </div>
+                <div class="admin-card-body">
+                  <div class="form-group">
+                    <label class="form-label"><i class="fab fa-facebook" style="color:#1877f2;margin-right:6px"></i>Facebook</label>
+                    <input type="url" class="form-control" id="socialFacebook" placeholder="https://www.facebook.com/...">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label"><i class="fab fa-instagram" style="color:#e1306c;margin-right:6px"></i>Instagram</label>
+                    <input type="url" class="form-control" id="socialInstagram" placeholder="https://www.instagram.com/...">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label"><i class="fab fa-linkedin" style="color:#0a66c2;margin-right:6px"></i>LinkedIn</label>
+                    <input type="url" class="form-control" id="socialLinkedin" placeholder="https://www.linkedin.com/...">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label"><i class="fab fa-youtube" style="color:#ff0000;margin-right:6px"></i>YouTube</label>
+                    <input type="url" class="form-control" id="socialYoutube" placeholder="https://www.youtube.com/...">
+                  </div>
+                  <button class="btn btn-primary" onclick="saveSocial()"><i class="fas fa-save"></i> Enregistrer</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="settings-panel" id="panel-password">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-lock"></i> Changer le Mot de Passe</div>
+                </div>
+                <div class="admin-card-body">
+                  <div style="max-width:400px">
+                    <div class="form-group">
+                      <label class="form-label">Mot de passe actuel</label>
+                      <input type="password" class="form-control" id="currentPassword" placeholder="Mot de passe actuel">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Nouveau mot de passe</label>
+                      <input type="password" class="form-control" id="newPassword" placeholder="Nouveau mot de passe (min. 6 caractères)">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Confirmer le nouveau mot de passe</label>
+                      <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmez le nouveau mot de passe">
+                    </div>
+                    <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-key"></i> Changer le mot de passe</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data -->
+            <div class="settings-panel" id="panel-data">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <div class="admin-card-title"><i class="fas fa-database"></i> Gestion des Données</div>
+                </div>
+                <div class="admin-card-body">
+                  <p style="color:#888;font-size:0.88rem;margin-bottom:24px">Exportez ou réinitialisez les données du site stockées dans le localStorage.</p>
+
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div>
+                        <h4 style="font-weight:600;color:#fff;margin-bottom:4px">Exporter les données</h4>
+                        <p style="font-size:0.83rem;color:#888">Téléchargez toutes les données en JSON.</p>
+                      </div>
+                      <button class="btn btn-secondary" onclick="exportData()"><i class="fas fa-download"></i> Exporter</button>
+                    </div>
+
+                    <div style="background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div>
+                        <h4 style="font-weight:600;color:#fff;margin-bottom:4px">Importer des données</h4>
+                        <p style="font-size:0.83rem;color:#888">Importez un fichier JSON de sauvegarde.</p>
+                      </div>
+                      <label class="btn btn-secondary" style="cursor:pointer">
+                        <i class="fas fa-upload"></i> Importer
+                        <input type="file" accept=".json" style="display:none" onchange="importData(this)">
+                      </label>
+                    </div>
+
+                    <div style="background:rgba(196,30,46,0.05);border:1px solid rgba(196,30,46,0.2);border-radius:8px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div>
+                        <h4 style="font-weight:600;color:#C41E2E;margin-bottom:4px"><i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>Réinitialiser toutes les données</h4>
+                        <p style="font-size:0.83rem;color:#888">Supprime tous les produits, actualités, médias et ventes. Irréversible.</p>
+                      </div>
+                      <button class="btn btn-danger" onclick="resetAllData()"><i class="fas fa-trash-alt"></i> Réinitialiser</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      loadSettings();
+
+      // Settings nav
+      document.querySelectorAll('.settings-nav-link').forEach(link => {
+        link.addEventListener('click', function () {
+          document.querySelectorAll('.settings-nav-link').forEach(l => l.classList.remove('active'));
+          document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+          this.classList.add('active');
+          const panel = document.getElementById('panel-' + this.dataset.panel);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    });
+
+    function loadSettings() {
+      const s = OZT.getSettings();
+
+      // Texts
+      if (document.getElementById('homeIntroTitle')) document.getElementById('homeIntroTitle').value = s.homeIntroTitle || '';
+      if (document.getElementById('homeIntroText')) document.getElementById('homeIntroText').value = s.homeIntroText || '';
+      if (document.getElementById('aboutText')) document.getElementById('aboutText').value = s.aboutText || '';
+      if (document.getElementById('aboutText2')) document.getElementById('aboutText2').value = s.aboutText2 || '';
+
+      // Social
+      const social = s.socialLinks || {};
+      if (document.getElementById('socialFacebook')) document.getElementById('socialFacebook').value = social.facebook || '';
+      if (document.getElementById('socialInstagram')) document.getElementById('socialInstagram').value = social.instagram || '';
+      if (document.getElementById('socialLinkedin')) document.getElementById('socialLinkedin').value = social.linkedin || '';
+      if (document.getElementById('socialYoutube')) document.getElementById('socialYoutube').value = social.youtube || '';
+
+      // Hero slides
+      renderHeroSlidesManager(s.heroSlides || [], s.heroImages || []);
+    }
+
+    function renderHeroSlidesManager(slides, images) {
+      const container = document.getElementById('heroSlidesManager');
+      container.innerHTML = '';
+      const count = Math.max(slides.length, images.length, 1);
+      for (let i = 0; i < count; i++) {
+        const slide = slides[i] || {};
+        const img = images[i] || '';
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:14px';
+        div.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <h4 style="font-weight:700;color:#fff;font-size:0.9rem">Slide ${i + 1}</h4>
+            <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('[data-slide]').remove()"><i class="fas fa-trash"></i> Supprimer</button>
+          </div>
+          <div class="form-grid-2" style="gap:12px">
+            <div class="form-group" style="margin-bottom:12px">
+              <label class="form-label" style="font-size:0.75rem">URL de l'image</label>
+              <input type="text" class="form-control hero-img-url" value="${img}" placeholder="https://...">
+            </div>
+            <div class="form-group" style="margin-bottom:12px">
+              <label class="form-label" style="font-size:0.75rem">Badge</label>
+              <input type="text" class="form-control hero-badge" value="${slide.badge || ''}" placeholder="Ex: Châteaubriant">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" style="font-size:0.75rem">Titre (HTML autorisé)</label>
+            <input type="text" class="form-control hero-title-input" value="${(slide.title || '').replace(/"/g, '&quot;')}" placeholder="Titre du slide">
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" style="font-size:0.75rem">Sous-titre</label>
+            <input type="text" class="form-control hero-subtitle" value="${slide.subtitle || ''}" placeholder="Sous-titre du slide">
+          </div>
+          <div class="form-grid-2" style="gap:12px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" style="font-size:0.75rem">Texte du bouton</label>
+              <input type="text" class="form-control hero-btn-text" value="${slide.btnText || 'Voir nos produits'}" placeholder="Texte bouton">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" style="font-size:0.75rem">Lien du bouton</label>
+              <input type="text" class="form-control hero-btn-link" value="${slide.btnLink || ''}" placeholder="/produits/tous-nos-produits.html">
+            </div>
+          </div>
+        `;
+        div.dataset.slide = i;
+        container.appendChild(div);
+      }
+    }
+
+    function addHeroSlide() {
+      const container = document.getElementById('heroSlidesManager');
+      const count = container.children.length;
+      const div = document.createElement('div');
+      div.style.cssText = 'background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:14px';
+      div.dataset.slide = count;
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h4 style="font-weight:700;color:#fff;font-size:0.9rem">Slide ${count + 1}</h4>
+          <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('[data-slide]').remove()"><i class="fas fa-trash"></i> Supprimer</button>
+        </div>
+        <div class="form-grid-2" style="gap:12px">
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" style="font-size:0.75rem">URL de l'image</label>
+            <input type="text" class="form-control hero-img-url" placeholder="https://...">
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" style="font-size:0.75rem">Badge</label>
+            <input type="text" class="form-control hero-badge" placeholder="Ex: Châteaubriant">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" style="font-size:0.75rem">Titre</label>
+          <input type="text" class="form-control hero-title-input" placeholder="Titre du slide">
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" style="font-size:0.75rem">Sous-titre</label>
+          <input type="text" class="form-control hero-subtitle" placeholder="Sous-titre du slide">
+        </div>
+        <div class="form-grid-2" style="gap:12px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" style="font-size:0.75rem">Texte du bouton</label>
+            <input type="text" class="form-control hero-btn-text" value="Voir nos produits" placeholder="Texte bouton">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" style="font-size:0.75rem">Lien du bouton</label>
+            <input type="text" class="form-control hero-btn-link" placeholder="/produits/tous-nos-produits.html">
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    function saveHeroSettings() {
+      const slides = [];
+      const images = [];
+      document.querySelectorAll('#heroSlidesManager [data-slide]').forEach(div => {
+        images.push(div.querySelector('.hero-img-url').value.trim());
+        slides.push({
+          badge: div.querySelector('.hero-badge').value.trim(),
+          title: div.querySelector('.hero-title-input').value.trim(),
+          subtitle: div.querySelector('.hero-subtitle').value.trim(),
+          btnText: div.querySelector('.hero-btn-text').value.trim(),
+          btnLink: div.querySelector('.hero-btn-link').value.trim()
+        });
+      });
+      const s = OZT.getSettings();
+      s.heroImages = images;
+      s.heroSlides = slides;
+      OZT.saveSettings(s);
+      adminToast('Slides hero enregistrés !', 'success');
+    }
+
+    function saveTexts() {
+      const s = OZT.getSettings();
+      s.homeIntroTitle = document.getElementById('homeIntroTitle').value.trim();
+      s.homeIntroText = document.getElementById('homeIntroText').value.trim();
+      OZT.saveSettings(s);
+      adminToast('Textes enregistrés !', 'success');
+    }
+
+    function saveAbout() {
+      const s = OZT.getSettings();
+      s.aboutText = document.getElementById('aboutText').value.trim();
+      s.aboutText2 = document.getElementById('aboutText2').value.trim();
+      OZT.saveSettings(s);
+      adminToast('Textes À Propos enregistrés !', 'success');
+    }
+
+    function saveSocial() {
+      const s = OZT.getSettings();
+      s.socialLinks = {
+        facebook: document.getElementById('socialFacebook').value.trim(),
+        instagram: document.getElementById('socialInstagram').value.trim(),
+        linkedin: document.getElementById('socialLinkedin').value.trim(),
+        youtube: document.getElementById('socialYoutube').value.trim()
+      };
+      OZT.saveSettings(s);
+      adminToast('Réseaux sociaux enregistrés !', 'success');
+    }
+
+    function changePassword() {
+      const current = document.getElementById('currentPassword').value;
+      const newPwd = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      const s = OZT.getSettings();
+
+      if (current !== (s.password || 'admin123')) {
+        adminToast('Mot de passe actuel incorrect.', 'error'); return;
+      }
+      if (newPwd.length < 6) {
+        adminToast('Le nouveau mot de passe doit faire au moins 6 caractères.', 'error'); return;
+      }
+      if (newPwd !== confirm) {
+        adminToast('Les mots de passe ne correspondent pas.', 'error'); return;
+      }
+
+      s.password = newPwd;
+      OZT.saveSettings(s);
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      adminToast('Mot de passe modifié avec succès !', 'success');
+    }
+
+    function exportData() {
+      const data = {
+        products: OZT.getProducts(),
+        news: OZT.getNews(),
+        medias: OZT.getMedias(),
+        sales: OZT.getSales(),
+        settings: OZT.getSettings(),
+        exportDate: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ozt-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      adminToast('Données exportées !', 'success');
+    }
+
+    function importData(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          adminConfirm('Importer ces données ? Les données actuelles seront remplacées.', function () {
+            if (data.products) OZT.saveProducts(data.products);
+            if (data.news) OZT.saveNews(data.news);
+            if (data.medias) OZT.saveMedias(data.medias);
+            if (data.sales) OZT.saveSales(data.sales);
+            if (data.settings) OZT.saveSettings(data.settings);
+            adminToast('Données importées avec succès !', 'success');
+            setTimeout(() => location.reload(), 1000);
+          });
+        } catch (err) {
+          adminToast('Fichier JSON invalide.', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllData() {
+      adminConfirm('Supprimer TOUTES les données (produits, actualités, médias, ventes) ? Cette action est irréversible !', function () {
+        localStorage.removeItem('ozt_products');
+        localStorage.removeItem('ozt_news');
+        localStorage.removeItem('ozt_medias');
+        localStorage.removeItem('ozt_sales');
+        adminToast('Données réinitialisées. Rechargement...', 'success');
+        setTimeout(() => location.reload(), 1200);
+      });
+    }
+  </script>
+</body>
+</html>

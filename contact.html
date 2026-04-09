@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Contactez OZ Truck Trailer TP/BTP à Châteaubriant. Formulaire de contact, téléphone, adresse et plan d'accès.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Contact</span>
+        </div>
+        <h1>Contactez-<span>Nous</span></h1>
+        <p>Notre équipe est disponible pour répondre à toutes vos questions et vous accompagner dans vos projets.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Form -->
+        <div>
+          <div class="contact-form">
+            <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:6px;">Envoyez-nous un message</h2>
+            <p style="font-size:0.88rem;color:#888;margin-bottom:25px;">Nous vous répondrons dans les plus brefs délais.</p>
+
+            <form action="https://formsubmit.co/oz-truck-trailer@outlook.com" method="POST" id="contactForm">
+              <!-- FormSubmit config -->
+              <input type="hidden" name="_subject" value="Nouveau message - OZ Truck Trailer">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_next" value="https://oztrucktrailer.fr/contact.html?sent=1">
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                  <label class="form-label">Prénom *</label>
+                  <input type="text" name="prenom" class="form-control" placeholder="Votre prénom" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nom *</label>
+                  <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" placeholder="votre@email.com" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" name="telephone" class="form-control" placeholder="06 XX XX XX XX">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Entreprise</label>
+                <input type="text" name="entreprise" class="form-control" placeholder="Nom de votre entreprise">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Sujet *</label>
+                <select name="sujet" class="form-control" required>
+                  <option value="">Choisissez un sujet</option>
+                  <option value="Demande de devis">Demande de devis</option>
+                  <option value="Information produit">Information produit</option>
+                  <option value="Réparation / Entretien">Réparation / Entretien</option>
+                  <option value="Location">Location</option>
+                  <option value="Pièces détachées">Pièces détachées</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Message *</label>
+                <textarea name="message" class="form-control" rows="5" placeholder="Décrivez votre besoin..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100" style="justify-content:center;padding:14px;">
+                <i class="fas fa-paper-plane"></i> Envoyer le message
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="contact-info">
+          <div class="contact-info-card">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="contact-info-content">
+              <h4>Adresse</h4>
+              <p>8 Allée Du Foirail<br>44110 Châteaubriant<br>Loire-Atlantique</p>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+            <div class="contact-info-content">
+              <h4>Téléphone</h4>
+              <a href="tel:0244051090">02 44 05 10 90</a>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div class="contact-info-content">
+              <h4>Email</h4>
+              <a href="mailto:oz-truck-trailer@outlook.com">oz-truck-trailer@outlook.com</a>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon"><i class="fas fa-clock"></i></div>
+            <div class="contact-info-content">
+              <h4>Horaires d'ouverture</h4>
+              <p>Lundi – Vendredi : 8h00 – 18h00<br>Samedi : 8h00 – 12h00<br>Dimanche : Fermé</p>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="contact-icon"><i class="fas fa-building"></i></div>
+            <div class="contact-info-content">
+              <h4>Informations légales</h4>
+              <p>SIRET : 80926449200012<br>OZ Truck Trailer TP/BTP</p>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:22px;">
+            <h4 style="font-size:0.82rem;font-weight:700;text-transform:uppercase;color:#888;letter-spacing:0.5px;margin-bottom:14px;">Réseaux Sociaux</h4>
+            <div style="display:flex;gap:10px;" id="contactSocial">
+              <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section class="section section-dark" style="padding-top:0">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:30px">
+        <div class="section-tag"><i class="fas fa-map"></i> Localisation</div>
+        <h2 class="section-title">Nous <span>Trouver</span></h2>
+      </div>
+      <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2681.9!2d-1.3727!3d47.7191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48060c1f23c6a123%3A0x123456789!2s8%20All%C3%A9e%20du%20Foirail%2C%2044110%20Ch%C3%A2teaubriant!5e0!3m2!1sfr!2sfr!4v1" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Check if form was submitted
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('sent') === '1') {
+        showToast('Message envoyé avec succès ! Nous vous répondrons rapidement.', 'success');
+      }
+
+      // Update social links from settings
+      const settings = OZT.getSettings();
+      const social = settings.socialLinks || {};
+      const socialContainer = document.getElementById('contactSocial');
+      if (socialContainer) {
+        socialContainer.innerHTML = `
+          <a href="${social.facebook || '#'}" target="_blank" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="${social.instagram || '#'}" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="${social.linkedin || '#'}" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="${social.youtube || '#'}" target="_blank" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

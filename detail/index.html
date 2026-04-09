@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détail - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Détail produit OZ Truck Trailer TP/BTP.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header" id="detailHeader" style="padding:80px 0 40px">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb" id="detailBreadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span id="breadcrumbCat">Produits</span>
+          <i class="fas fa-chevron-right"></i>
+          <span id="breadcrumbName">...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" style="padding-top:30px">
+    <div class="container">
+      <div id="detailContent">
+        <div style="text-align:center;padding:80px 0">
+          <div class="spinner"></div>
+          <p style="color:#888;margin-top:20px">Chargement...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related products -->
+  <section class="section section-dark" id="relatedSection" style="display:none">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:35px">
+        <div class="section-tag"><i class="fas fa-th-large"></i> Similaires</div>
+        <h2 class="section-title">Produits <span>Similaires</span></h2>
+      </div>
+      <div class="products-grid" id="relatedGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="detailCta">
+    <div class="container">
+      <h2>Intéressé par ce produit ?</h2>
+      <p>Contactez-nous pour plus d'informations, un devis ou pour organiser une visite.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <a href="../contact.html" class="btn btn-outline btn-lg"><i class="fas fa-envelope"></i> Demander un devis</a>
+        <a href="tel:0244051090" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.6)"><i class="fas fa-phone"></i> 02 44 05 10 90</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const type = params.get('type') || 'product';
+
+    if (!id) {
+      showError('Aucun identifiant fourni.');
+      return;
+    }
+
+    if (type === 'product') renderProduct(id);
+    else if (type === 'news') renderNews(id);
+    else if (type === 'sale') renderSale(id);
+    else if (type === 'media') renderMedia(id);
+    else showError('Type inconnu.');
+  });
+
+  function showError(msg) {
+    document.getElementById('detailContent').innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-circle"></i>
+        <h3>Contenu introuvable</h3>
+        <p>${msg}</p>
+        <a href="../produits/tous-nos-produits.html" class="btn btn-primary" style="margin-top:20px"><i class="fas fa-arrow-left"></i> Retour aux produits</a>
+      </div>
+    `;
+    document.getElementById('detailCta').style.display = 'none';
+  }
+
+  function renderProduct(id) {
+    const p = OZT.getProductById(id);
+    if (!p) { showError('Produit introuvable.'); return; }
+
+    document.title = p.name + ' - OZ Truck Trailer TP/BTP';
+    document.getElementById('breadcrumbCat').textContent = getCatLabel(p.category);
+    document.getElementById('breadcrumbName').textContent = p.name;
+
+    const imgs = p.images && p.images.length ? p.images : [];
+    let currentImg = 0;
+
+    const specsHtml = p.specs && Object.keys(p.specs).length
+      ? Object.entries(p.specs).map(([k,v]) => `
+          <div class="spec-row">
+            <span class="spec-key">${k}</span>
+            <span class="spec-val">${v}</span>
+          </div>`).join('')
+      : '<p style="color:#888;font-size:0.88rem">Aucune caractéristique renseignée.</p>';
+
+    document.getElementById('detailContent').innerHTML = `
+      <div class="detail-layout">
+        <div>
+          <div class="detail-gallery">
+            <div class="detail-main-img" id="mainImgContainer">
+              ${imgs[0]
+                ? `<img id="mainImg" src="${imgs[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in" onclick="openLightbox(this.src)">`
+                : `<div class="no-img" style="height:450px"><i class="fas fa-image"></i><span>Pas d'image disponible</span></div>`
+              }
+            </div>
+            ${imgs.length > 1 ? `
+              <div class="detail-thumbs" id="thumbsContainer">
+                ${imgs.map((img, i) => `
+                  <div class="detail-thumb ${i===0?'active':''}" onclick="selectThumb(${i},'${id}')">
+                    <img src="${img}" alt="${p.name} ${i+1}" loading="lazy">
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+          ${p.description ? `
+            <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:28px;margin-top:20px">
+              <h3 style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:14px;"><i class="fas fa-align-left" style="color:#C41E2E;margin-right:8px"></i>Description</h3>
+              <p style="color:#aaa;font-size:0.93rem;line-height:1.8">${p.description}</p>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="detail-info">
+          ${p.brand ? `<div class="detail-brand"><i class="fas fa-tag" style="margin-right:6px"></i>${p.brand}</div>` : ''}
+          <h1 class="detail-title">${p.name}</h1>
+          <div class="detail-price">
+            ${p.price ? `${parseFloat(p.price).toLocaleString('fr-FR')} €` : `<span style="font-size:1.2rem;color:#888">${p.priceLabel || 'Sur devis'}</span>`}
+          </div>
+
+          ${p.specs && Object.keys(p.specs).length ? `
+            <div class="detail-specs">
+              <h4><i class="fas fa-list-ul" style="color:#C41E2E;margin-right:8px"></i>Caractéristiques</h4>
+              ${specsHtml}
+            </div>
+          ` : ''}
+
+          <div class="detail-actions">
+            <a href="../contact.html?sujet=Information+produit&produit=${encodeURIComponent(p.name)}" class="btn btn-primary w-100" style="justify-content:center">
+              <i class="fas fa-envelope"></i> Demander un devis
+            </a>
+            <a href="tel:0244051090" class="btn btn-outline w-100" style="justify-content:center">
+              <i class="fas fa-phone"></i> 02 44 05 10 90
+            </a>
+            <a href="../produits/tous-nos-produits.html" class="btn btn-secondary w-100" style="justify-content:center;background:#1a1a1a;border:1px solid #333;color:#aaa">
+              <i class="fas fa-arrow-left"></i> Retour aux produits
+            </a>
+          </div>
+
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid #2a2a2a">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <i class="fas fa-check-circle" style="color:#28a745"></i>
+              <span style="font-size:0.84rem;color:#aaa">Livraison nationale disponible</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <i class="fas fa-check-circle" style="color:#28a745"></i>
+              <span style="font-size:0.84rem;color:#aaa">Service après-vente agréé</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <i class="fas fa-check-circle" style="color:#28a745"></i>
+              <span style="font-size:0.84rem;color:#aaa">Financement possible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    window.selectThumb = function(index, prodId) {
+      const prod = OZT.getProductById(prodId);
+      if (!prod || !prod.images) return;
+      const mainImg = document.getElementById('mainImg');
+      if (mainImg) mainImg.src = prod.images[index];
+      document.querySelectorAll('.detail-thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === index);
+      });
+    };
+
+    // Related products
+    const related = OZT.getPublishedProducts()
+      .filter(r => r.category === p.category && r.id !== p.id)
+      .slice(0, 3);
+    if (related.length > 0) {
+      const relSection = document.getElementById('relatedSection');
+      relSection.style.display = 'block';
+      document.getElementById('relatedGrid').innerHTML = related.map(r => renderProductCard(r)).join('');
+    }
+  }
+
+  function renderNews(id) {
+    const n = OZT.getNewsById(id);
+    if (!n) { showError('Actualité introuvable.'); return; }
+
+    document.title = n.title + ' - OZ Truck Trailer TP/BTP';
+    document.getElementById('breadcrumbCat').textContent = 'Actualités';
+    document.getElementById('breadcrumbName').textContent = n.title;
+    document.getElementById('detailCta').style.display = 'none';
+
+    document.getElementById('detailContent').innerHTML = `
+      <div style="max-width:800px;margin:0 auto">
+        ${n.image ? `<img src="${n.image}" alt="${n.title}" style="width:100%;height:400px;object-fit:cover;border-radius:12px;margin-bottom:30px">` : ''}
+        <div class="news-date" style="font-size:0.85rem;color:#C41E2E;font-weight:600;margin-bottom:12px">${formatDate(n.date)}</div>
+        <h1 style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:20px;line-height:1.3">${n.title}</h1>
+        <div style="color:#aaa;font-size:0.97rem;line-height:1.9">${n.content || n.excerpt || ''}</div>
+        <div style="margin-top:40px;padding-top:24px;border-top:1px solid #2a2a2a">
+          <a href="../entreprise/actualites.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Toutes les actualités</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSale(id) {
+    const s = OZT.getSaleById(id);
+    if (!s) { showError('Vente introuvable.'); return; }
+
+    document.title = s.title + ' - OZ Truck Trailer TP/BTP';
+    document.getElementById('breadcrumbCat').textContent = 'Ventes Réalisées';
+    document.getElementById('breadcrumbName').textContent = s.title;
+    document.getElementById('detailCta').style.display = 'none';
+
+    document.getElementById('detailContent').innerHTML = `
+      <div style="max-width:800px;margin:0 auto">
+        ${s.image ? `<img src="${s.image}" alt="${s.title}" style="width:100%;height:400px;object-fit:cover;border-radius:12px;margin-bottom:30px">` : ''}
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+          <span style="background:#28a745;color:#fff;padding:4px 14px;border-radius:20px;font-size:0.78rem;font-weight:700;text-transform:uppercase">Vendu</span>
+          ${s.category ? `<span style="background:rgba(196,30,46,0.15);color:#C41E2E;border:1px solid rgba(196,30,46,0.3);padding:4px 14px;border-radius:20px;font-size:0.78rem;font-weight:700">${s.category}</span>` : ''}
+          <span style="font-size:0.85rem;color:#888">${formatDate(s.date)}</span>
+        </div>
+        <h1 style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:20px;line-height:1.3">${s.title}</h1>
+        <p style="color:#aaa;font-size:0.97rem;line-height:1.9">${s.description || ''}</p>
+        <div style="margin-top:40px;padding-top:24px;border-top:1px solid #2a2a2a">
+          <a href="../ventes-realisees.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Toutes les ventes</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMedia(id) {
+    const m = OZT.getMediaById(id);
+    if (!m) { showError('Média introuvable.'); return; }
+
+    document.title = m.title + ' - OZ Truck Trailer TP/BTP';
+    document.getElementById('breadcrumbCat').textContent = 'Photos & Vidéos';
+    document.getElementById('breadcrumbName').textContent = m.title;
+    document.getElementById('detailCta').style.display = 'none';
+
+    document.getElementById('detailContent').innerHTML = `
+      <div style="max-width:900px;margin:0 auto;text-align:center">
+        ${m.type === 'video'
+          ? `<video src="${m.url}" controls style="width:100%;border-radius:12px;margin-bottom:24px"></video>`
+          : `<img src="${m.url}" alt="${m.title}" style="width:100%;max-height:600px;object-fit:contain;border-radius:12px;margin-bottom:24px;cursor:zoom-in" onclick="openLightbox(this.src)">`
+        }
+        <h1 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:12px">${m.title}</h1>
+        ${m.description ? `<p style="color:#aaa;font-size:0.95rem;line-height:1.8">${m.description}</p>` : ''}
+        <div style="margin-top:30px">
+          <a href="../photos-videos.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Retour galerie</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function getCatLabel(cat) {
+    const map = { 'remorques':'Remorques', 'materiel-tp':'Matériel TP', 'poids-lourds':'Poids Lourds', 'machines':'Machines', 'occasions':'Occasions', 'pieces-detachees':'Pièces Détachées' };
+    return map[cat] || 'Produits';
+  }
+  </script>
+</body>
+</html>

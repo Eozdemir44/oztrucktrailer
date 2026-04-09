@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion Actualités - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link active"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Gestion des Actualités</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn btn-primary" onclick="openNewsModal()"><i class="fas fa-plus"></i> Nouvelle actualité</button>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-newspaper"></i> Actualités (<span id="newsCount">0</span>)</div>
+          </div>
+          <div class="admin-card-body" style="padding-bottom:0">
+            <div class="admin-filters">
+              <div class="admin-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher..." id="searchInput" oninput="filterNews()">
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Titre</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="newsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="newsModal">
+    <div class="modal" style="max-width:700px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Nouvelle Actualité</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="newsId">
+        <div class="form-group">
+          <label class="form-label">Titre *</label>
+          <input type="text" class="form-control" id="newsTitle" placeholder="Titre de l'actualité" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Extrait (résumé)</label>
+          <textarea class="form-control" id="newsExcerpt" rows="2" placeholder="Court résumé affiché dans la liste..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contenu complet</label>
+          <textarea class="form-control" id="newsContent" rows="6" placeholder="Contenu complet de l'actualité..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL de l'image</label>
+          <input type="text" class="form-control" id="newsImage" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date de publication</label>
+          <input type="date" class="form-control" id="newsDate">
+        </div>
+        <div class="form-group">
+          <div class="toggle-group">
+            <label class="toggle">
+              <input type="checkbox" id="newsPublished" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Publier cette actualité</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close">Annuler</button>
+        <button class="btn btn-primary" onclick="saveNews()"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderTable();
+      if (window.location.hash === '#new') openNewsModal();
+    });
+
+    function renderTable(items) {
+      const all = items || OZT.getNews();
+      document.getElementById('newsCount').textContent = all.length;
+      const tbody = document.getElementById('newsTable');
+      if (!all.length) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><i class="fas fa-newspaper"></i><p>Aucune actualité. Cliquez sur "Nouvelle actualité".</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = all.map(n => `
+        <tr>
+          <td>
+            ${n.image ? `<img src="${n.image}" class="product-thumb" alt="" onerror="this.style.display='none'">` : '<div style="width:50px;height:40px;background:#222;border-radius:6px"></div>'}
+          </td>
+          <td style="font-weight:600;color:#fff;max-width:220px" class="truncate">${n.title}</td>
+          <td style="color:#888;font-size:0.83rem">${n.date || '-'}</td>
+          <td>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" ${n.published ? 'checked' : ''} onchange="toggleNewsPublished('${n.id}', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="badge ${n.published ? 'badge-success' : 'badge-secondary'}">${n.published ? 'Publié' : 'Masqué'}</span>
+            </div>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="btn btn-warning btn-icon" onclick="editNews('${n.id}')" title="Modifier"><i class="fas fa-edit"></i></button>
+              <a href="../detail/index.html?id=${n.id}&type=news" target="_blank" class="btn btn-secondary btn-icon" title="Voir"><i class="fas fa-eye"></i></a>
+              <button class="btn btn-danger btn-icon" onclick="deleteNews('${n.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterNews() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      let items = OZT.getNews();
+      if (q) items = items.filter(n => n.title.toLowerCase().includes(q));
+      renderTable(items);
+    }
+
+    function openNewsModal(news) {
+      document.getElementById('modalTitle').textContent = news ? 'Modifier l\'actualité' : 'Nouvelle Actualité';
+      document.getElementById('newsId').value = news ? news.id : '';
+      document.getElementById('newsTitle').value = news ? news.title : '';
+      document.getElementById('newsExcerpt').value = news ? (news.excerpt || '') : '';
+      document.getElementById('newsContent').value = news ? (news.content || '') : '';
+      document.getElementById('newsImage').value = news ? (news.image || '') : '';
+      document.getElementById('newsDate').value = news ? (news.date || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
+      document.getElementById('newsPublished').checked = news ? !!news.published : true;
+      openModal('newsModal');
+    }
+
+    function editNews(id) {
+      const n = OZT.getNewsById(id);
+      if (n) openNewsModal(n);
+    }
+
+    function saveNews() {
+      const title = document.getElementById('newsTitle').value.trim();
+      if (!title) { adminToast('Le titre est requis.', 'error'); return; }
+
+      const id = document.getElementById('newsId').value || OZT.genId('news');
+      const news = {
+        id,
+        title,
+        excerpt: document.getElementById('newsExcerpt').value.trim(),
+        content: document.getElementById('newsContent').value.trim(),
+        image: document.getElementById('newsImage').value.trim(),
+        date: document.getElementById('newsDate').value,
+        published: document.getElementById('newsPublished').checked
+      };
+
+      const all = OZT.getNews();
+      const idx = all.findIndex(n => n.id === id);
+      if (idx >= 0) all[idx] = news; else all.push(news);
+      OZT.saveNews(all);
+      closeModal('newsModal');
+      renderTable();
+      adminToast(idx >= 0 ? 'Actualité modifiée !' : 'Actualité ajoutée !', 'success');
+    }
+
+    function toggleNewsPublished(id, published) {
+      const all = OZT.getNews();
+      const n = all.find(n => n.id === id);
+      if (n) { n.published = published; OZT.saveNews(all); renderTable(); adminToast(published ? 'Actualité publiée.' : 'Actualité masquée.', 'success'); }
+    }
+
+    function deleteNews(id) {
+      adminConfirm('Supprimer cette actualité ?', function () {
+        OZT.saveNews(OZT.getNews().filter(n => n.id !== id));
+        renderTable();
+        adminToast('Actualité supprimée.', 'success');
+      });
+    }
+  </script>
+</body>
+</html>

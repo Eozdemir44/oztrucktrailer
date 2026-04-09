@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tous Nos Produits - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Découvrez tous les produits OZ Truck Trailer : remorques, semi-remorques, matériel TP, poids lourds, machines et pièces détachées.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="../index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Tous Nos Produits</span>
+        </div>
+        <h1>Tous Nos <span>Produits</span></h1>
+        <p>L'ensemble de notre catalogue : remorques, matériel TP, poids lourds et plus.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Search results header (shown when query) -->
+      <div id="searchResultsHeader" style="display:none" class="search-results-header">
+        <h2>Résultats pour <span id="searchQuery"></span></h2>
+        <span id="searchCount">0</span> résultat(s)
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-bar" id="filtersBar">
+        <button class="filter-btn active" data-filter="all">Tous <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="remorques">Remorques <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="materiel-tp">Matériel TP <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="poids-lourds">Poids Lourds <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="machines">Machines <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="occasions">Occasions <span class="filter-count"></span></button>
+        <button class="filter-btn" data-filter="pieces-detachees">Pièces <span class="filter-count"></span></button>
+      </div>
+
+      <!-- Sort + count -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <p style="color:#888;font-size:0.88rem"><span id="productCount">0</span> produit(s) affiché(s)</p>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label style="font-size:0.83rem;color:#888">Trier par :</label>
+          <select id="sortSelect" class="form-control" style="width:auto;background:#1a1a1a;border:1px solid #333;color:#fff;padding:7px 12px;border-radius:7px;font-size:0.83rem;font-family:Inter,sans-serif;outline:none">
+            <option value="default">Par défaut</option>
+            <option value="name-asc">Nom A-Z</option>
+            <option value="name-desc">Nom Z-A</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="products-grid" id="allProductsGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+
+      let products = OZT.getPublishedProducts();
+
+      if (q) {
+        const results = OZT.searchAll(q);
+        products = results.filter(r => r.type === 'product').map(r => r.item);
+        document.getElementById('searchResultsHeader').style.display = 'flex';
+        document.getElementById('searchQuery').textContent = '"' + q + '"';
+        document.getElementById('searchCount').textContent = products.length;
+        document.getElementById('filtersBar').style.display = 'none';
+      }
+
+      let currentProducts = products.slice();
+
+      function renderGrid() {
+        const grid = document.getElementById('allProductsGrid');
+        document.getElementById('productCount').textContent = currentProducts.length;
+        if (currentProducts.length === 0) {
+          grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-boxes"></i><h3>Aucun produit trouvé</h3><p>Modifiez vos critères de recherche.</p></div>';
+          return;
+        }
+        grid.innerHTML = currentProducts.map(function(p) {
+          const html = renderProductCard(p);
+          return html.replace('class="product-card', `class="product-card" data-category="${p.category}" data-sub="${p.subCategory || ''}"`);
+        }).join('');
+      }
+
+      renderGrid();
+
+      // Sort
+      document.getElementById('sortSelect').addEventListener('change', function() {
+        const val = this.value;
+        if (val === 'name-asc') currentProducts.sort((a,b) => a.name.localeCompare(b.name));
+        else if (val === 'name-desc') currentProducts.sort((a,b) => b.name.localeCompare(a.name));
+        else if (val === 'price-asc') currentProducts.sort((a,b) => (a.price||999999) - (b.price||999999));
+        else if (val === 'price-desc') currentProducts.sort((a,b) => (b.price||0) - (a.price||0));
+        else currentProducts = products.slice();
+        renderGrid();
+      });
+
+      // Filter buttons
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const filter = this.dataset.filter;
+          currentProducts = filter === 'all' ? products.slice() : products.filter(p => p.category === filter);
+          renderGrid();
+        });
+      });
+
+      // Update filter counts
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        const f = btn.dataset.filter;
+        const cnt = btn.querySelector('.filter-count');
+        if (cnt) cnt.textContent = f === 'all' ? products.length : products.filter(p => p.category === f).length;
+      });
+    });
+  </script>
+</body>
+</html>

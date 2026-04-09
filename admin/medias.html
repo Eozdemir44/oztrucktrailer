@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion Médias - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link active"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Gestion des Médias</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn btn-primary" onclick="openMediaModal()"><i class="fas fa-plus"></i> Nouveau média</button>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Stats -->
+        <div class="admin-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-images"></i></div>
+            <div class="stat-info"><div class="stat-value" id="totalMedias">0</div><div class="stat-label-admin">Total médias</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-camera"></i></div>
+            <div class="stat-info"><div class="stat-value" id="totalPhotos">0</div><div class="stat-label-admin">Photos</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-video"></i></div>
+            <div class="stat-info"><div class="stat-value" id="totalVideos">0</div><div class="stat-label-admin">Vidéos</div></div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-images"></i> Médiathèque</div>
+            <div style="display:flex;gap:10px">
+              <select class="admin-select" id="typeFilter" onchange="filterMedias()">
+                <option value="">Tous types</option>
+                <option value="photo">Photos</option>
+                <option value="video">Vidéos</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-card-body">
+            <!-- Grid view -->
+            <div id="mediasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="mediaModal">
+    <div class="modal" style="max-width:580px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Nouveau Média</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="mediaId">
+        <div class="form-group">
+          <label class="form-label">Titre *</label>
+          <input type="text" class="form-control" id="mediaTitle" placeholder="Titre du média">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-control" id="mediaType">
+            <option value="photo">Photo</option>
+            <option value="video">Vidéo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL du média</label>
+          <input type="text" class="form-control" id="mediaUrl" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload image (base64)</label>
+          <div class="img-upload-area" id="mediaUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Glissez une image ici ou <span>cliquez pour sélectionner</span></p>
+            <input type="file" id="mediaUploadInput" accept="image/*,video/*" style="display:none">
+          </div>
+          <div class="img-preview-list" id="mediaPreviewList"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="mediaDescription" rows="2" placeholder="Description optionnelle..."></textarea>
+        </div>
+        <div class="form-group">
+          <div class="toggle-group">
+            <label class="toggle">
+              <input type="checkbox" id="mediaPublished" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Publier ce média</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close">Annuler</button>
+        <button class="btn btn-primary" onclick="saveMedia()"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      updateStats();
+      renderGrid();
+      initImageUpload('mediaUploadArea', 'mediaUploadInput', 'mediaPreviewList', function(base64) {
+        document.getElementById('mediaUrl').value = base64;
+      });
+      if (window.location.hash === '#new') openMediaModal();
+    });
+
+    function updateStats() {
+      const all = OZT.getMedias();
+      document.getElementById('totalMedias').textContent = all.length;
+      document.getElementById('totalPhotos').textContent = all.filter(m => m.type === 'photo').length;
+      document.getElementById('totalVideos').textContent = all.filter(m => m.type === 'video').length;
+    }
+
+    function renderGrid(items) {
+      const all = items || OZT.getMedias();
+      const grid = document.getElementById('mediasGrid');
+      if (!all.length) {
+        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-images"></i><p>Aucun média. Cliquez sur "Nouveau média".</p></div>';
+        return;
+      }
+      grid.innerHTML = all.map(m => `
+        <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;transition:0.2s" onmouseover="this.style.borderColor='#C41E2E'" onmouseout="this.style.borderColor='#2a2a2a'">
+          <div style="height:130px;overflow:hidden;background:#111;position:relative">
+            ${m.type === 'video'
+              ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111"><i class="fas fa-play-circle" style="font-size:2.5rem;color:#C41E2E"></i></div>`
+              : `<img src="${m.url}" alt="${m.title}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#444\\'><i class=\\'fas fa-image\\'></i></div>'">`
+            }
+            <span style="position:absolute;top:6px;right:6px;background:${m.published ? 'rgba(40,167,69,0.9)' : 'rgba(100,100,100,0.9)'};color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:10px;font-weight:700">${m.published ? 'Publié' : 'Masqué'}</span>
+            ${m.type === 'video' ? '<span style="position:absolute;top:6px;left:6px;background:rgba(196,30,46,0.9);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:10px;font-weight:700"><i class="fas fa-video"></i></span>' : ''}
+          </div>
+          <div style="padding:10px">
+            <p style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.title}</p>
+            <div style="display:flex;gap:6px;justify-content:flex-end">
+              <button class="btn btn-warning btn-icon" onclick="editMedia('${m.id}')" title="Modifier" style="width:28px;height:28px;font-size:0.75rem"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-danger btn-icon" onclick="deleteMedia('${m.id}')" title="Supprimer" style="width:28px;height:28px;font-size:0.75rem"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterMedias() {
+      const type = document.getElementById('typeFilter').value;
+      let items = OZT.getMedias();
+      if (type) items = items.filter(m => m.type === type);
+      renderGrid(items);
+    }
+
+    function openMediaModal(media) {
+      document.getElementById('modalTitle').textContent = media ? 'Modifier le média' : 'Nouveau Média';
+      document.getElementById('mediaId').value = media ? media.id : '';
+      document.getElementById('mediaTitle').value = media ? media.title : '';
+      document.getElementById('mediaType').value = media ? media.type : 'photo';
+      document.getElementById('mediaUrl').value = media ? (media.url || '') : '';
+      document.getElementById('mediaDescription').value = media ? (media.description || '') : '';
+      document.getElementById('mediaPublished').checked = media ? !!media.published : true;
+      document.getElementById('mediaPreviewList').innerHTML = '';
+      openModal('mediaModal');
+    }
+
+    function editMedia(id) {
+      const m = OZT.getMediaById(id);
+      if (m) openMediaModal(m);
+    }
+
+    function saveMedia() {
+      const title = document.getElementById('mediaTitle').value.trim();
+      if (!title) { adminToast('Le titre est requis.', 'error'); return; }
+      const uploadImgs = getImagesFromPreview('mediaPreviewList');
+      const id = document.getElementById('mediaId').value || OZT.genId('media');
+      const media = {
+        id,
+        title,
+        type: document.getElementById('mediaType').value,
+        url: uploadImgs[0] || document.getElementById('mediaUrl').value.trim(),
+        description: document.getElementById('mediaDescription').value.trim(),
+        published: document.getElementById('mediaPublished').checked,
+        date: new Date().toISOString().slice(0, 10)
+      };
+      const all = OZT.getMedias();
+      const idx = all.findIndex(m => m.id === id);
+      if (idx >= 0) all[idx] = media; else all.push(media);
+      OZT.saveMedias(all);
+      closeModal('mediaModal');
+      updateStats();
+      renderGrid();
+      adminToast(idx >= 0 ? 'Média modifié !' : 'Média ajouté !', 'success');
+    }
+
+    function deleteMedia(id) {
+      adminConfirm('Supprimer ce média ?', function () {
+        OZT.saveMedias(OZT.getMedias().filter(m => m.id !== id));
+        updateStats();
+        renderGrid();
+        adminToast('Média supprimé.', 'success');
+      });
+    }
+  </script>
+</body>
+</html>

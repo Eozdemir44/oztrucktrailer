@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Connexion | OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="../assets/logo.png" alt="OZ Truck Trailer" onerror="this.style.display='none'">
+        <h1>OZ Truck Trailer</h1>
+        <p>Panneau d'administration</p>
+      </div>
+
+      <div class="login-form">
+        <h2>Connexion</h2>
+        <p class="subtitle">Entrez votre mot de passe pour accéder au panneau d'administration.</p>
+
+        <div class="login-error" id="loginError">
+          <i class="fas fa-exclamation-circle"></i> Mot de passe incorrect. Veuillez réessayer.
+        </div>
+
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <div class="input-icon-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="passwordInput" class="form-control" placeholder="Entrez votre mot de passe" required autofocus>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" style="justify-content:center;padding:13px;font-size:0.95rem;margin-top:8px" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i> Se connecter
+          </button>
+        </form>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid #2a2a2a;text-align:center">
+          <a href="../index.html" style="font-size:0.83rem;color:#666;display:inline-flex;align-items:center;gap:6px;transition:0.2s" onmouseover="this.style.color='#C41E2E'" onmouseout="this.style.color='#666'">
+            <i class="fas fa-arrow-left"></i> Retour au site
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Redirect if already logged in
+    if (sessionStorage.getItem('ozt_admin_logged') === 'true') {
+      window.location.href = 'index.html';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const password = document.getElementById('passwordInput').value;
+      const btn = document.getElementById('loginBtn');
+      const error = document.getElementById('loginError');
+
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+      btn.disabled = true;
+
+      setTimeout(function () {
+        if (OZT.login(password)) {
+          btn.innerHTML = '<i class="fas fa-check"></i> Connecté !';
+          btn.style.background = '#28a745';
+          setTimeout(function () {
+            window.location.href = 'index.html';
+          }, 500);
+        } else {
+          error.classList.add('show');
+          btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+          btn.disabled = false;
+          document.getElementById('passwordInput').value = '';
+          document.getElementById('passwordInput').focus();
+          setTimeout(function () { error.classList.remove('show'); }, 4000);
+        }
+      }, 600);
+
+      return false;
+    }
+
+    // Allow Enter key
+    document.getElementById('passwordInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+      }
+    });
+  </script>
+</body>
+</html>

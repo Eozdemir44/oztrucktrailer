@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photos & Vidéos - OZ Truck Trailer TP/BTP</title>
+  <meta name="description" content="Galerie photos et vidéos de nos matériels, chantiers et équipements. OZ Truck Trailer TP/BTP à Châteaubriant.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header-content">
+        <div class="breadcrumb">
+          <a href="index.html">Accueil</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Photos &amp; Vidéos</span>
+        </div>
+        <h1>Photos &amp; <span>Vidéos</span></h1>
+        <p>Découvrez notre parc de matériels, notre atelier et nos chantiers en images.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Filters -->
+      <div class="filters-bar" style="margin-bottom:30px">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="photo"><i class="fas fa-camera" style="margin-right:5px"></i>Photos</button>
+        <button class="filter-btn" data-filter="video"><i class="fas fa-video" style="margin-right:5px"></i>Vidéos</button>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="spinner" style="grid-column:1/-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Vous souhaitez voir nos matériels en action ?</h2>
+      <p>Contactez-nous pour organiser une visite de notre parc ou une démonstration.</p>
+      <a href="contact.html" class="btn btn-outline btn-lg"><i class="fas fa-calendar-alt"></i> Organiser une visite</a>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let allMedias = OZT.getPublishedMedias();
+      let currentFilter = 'all';
+
+      function renderGallery(filter) {
+        const grid = document.getElementById('galleryGrid');
+        const filtered = filter === 'all' ? allMedias : allMedias.filter(m => m.type === filter);
+
+        if (!filtered.length) {
+          grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-images"></i><h3>Aucun média disponible</h3><p>Revenez bientôt pour découvrir nos nouvelles photos et vidéos.</p></div>';
+          return;
+        }
+
+        grid.innerHTML = filtered.map(m => `
+          <div class="gallery-item fade-in-up" onclick="${m.type === 'video' ? `window.location.href='detail/index.html?id=${m.id}&type=media'` : `openLightbox('${m.url}')`}">
+            ${m.type === 'video'
+              ? `<video src="${m.url}" style="width:100%;height:100%;object-fit:cover" muted></video>
+                 <div class="gallery-overlay"><i class="fas fa-play-circle" style="font-size:3rem"></i></div>`
+              : `<img src="${m.url}" alt="${m.title}" loading="lazy" onerror="this.parentElement.style.background='#1a1a1a'">
+                 <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>`
+            }
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);padding:20px 14px 12px">
+              <p style="font-size:0.83rem;font-weight:600;color:#fff">${m.title}</p>
+              ${m.type === 'video' ? '<span style="font-size:0.72rem;background:#C41E2E;color:#fff;padding:2px 8px;border-radius:10px"><i class="fas fa-video" style="margin-right:4px"></i>Vidéo</span>' : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderGallery('all');
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentFilter = this.dataset.filter;
+          renderGallery(currentFilter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

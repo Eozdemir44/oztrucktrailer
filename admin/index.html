@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Dashboard</span>
+        </div>
+        <div class="admin-header-right">
+          <a href="../index.html" target="_blank" class="header-btn"><i class="fas fa-eye"></i> Voir le site</a>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Welcome -->
+        <div style="margin-bottom:24px">
+          <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:4px">Bonjour, Administrateur 👋</h2>
+          <p style="color:#666;font-size:0.88rem" id="currentDate"></p>
+        </div>
+
+        <!-- Stats -->
+        <div class="admin-stats">
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-eye"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statVisits">0</div>
+              <div class="stat-label-admin">Visites totales</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-boxes"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statProducts">0</div>
+              <div class="stat-label-admin">Produits publiés</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statSales">0</div>
+              <div class="stat-label-admin">Ventes réalisées</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-images"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statMedias">0</div>
+              <div class="stat-label-admin">Médias</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon yellow"><i class="fas fa-newspaper"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="statNews">0</div>
+              <div class="stat-label-admin">Actualités</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-column layout -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+          <!-- Recent Products -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title"><i class="fas fa-boxes"></i> Derniers Produits</div>
+              <a href="produits.html" class="btn btn-secondary btn-sm">Voir tout</a>
+            </div>
+            <div class="admin-card-body" style="padding:0">
+              <div class="admin-table-wrapper">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Produit</th>
+                      <th>Catégorie</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentProductsTable">
+                    <tr><td colspan="3" style="text-align:center;color:#555;padding:20px">Chargement...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent News -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title"><i class="fas fa-newspaper"></i> Dernières Actualités</div>
+              <a href="actualites.html" class="btn btn-secondary btn-sm">Voir tout</a>
+            </div>
+            <div class="admin-card-body" style="padding:0">
+              <div class="admin-table-wrapper">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Titre</th>
+                      <th>Date</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentNewsTable">
+                    <tr><td colspan="3" style="text-align:center;color:#555;padding:20px">Chargement...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visits chart -->
+        <div class="admin-card" style="margin-top:24px">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-chart-line"></i> Visites (30 derniers jours)</div>
+            <a href="statistiques.html" class="btn btn-secondary btn-sm">Détails</a>
+          </div>
+          <div class="admin-card-body">
+            <div id="visitsChart"></div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="admin-card" style="margin-top:24px">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-bolt"></i> Actions Rapides</div>
+          </div>
+          <div class="admin-card-body">
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <a href="produits.html#new" class="btn btn-primary"><i class="fas fa-plus"></i> Nouveau produit</a>
+              <a href="actualites.html#new" class="btn btn-secondary"><i class="fas fa-plus"></i> Nouvelle actualité</a>
+              <a href="medias.html#new" class="btn btn-secondary"><i class="fas fa-upload"></i> Ajouter un média</a>
+              <a href="ventes.html#new" class="btn btn-secondary"><i class="fas fa-plus"></i> Nouvelle vente</a>
+              <a href="parametres.html" class="btn btn-secondary"><i class="fas fa-cog"></i> Paramètres</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Date
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Stats
+      updateDashboardStats();
+
+      // Recent products
+      const products = OZT.getProducts().slice(-5).reverse();
+      const pTable = document.getElementById('recentProductsTable');
+      if (products.length) {
+        pTable.innerHTML = products.map(p => `
+          <tr>
+            <td style="font-weight:600;color:#fff">${p.name}</td>
+            <td><span class="badge badge-info">${p.category || '-'}</span></td>
+            <td><span class="badge ${p.published ? 'badge-success' : 'badge-secondary'}">${p.published ? 'Publié' : 'Masqué'}</span></td>
+          </tr>
+        `).join('');
+      } else {
+        pTable.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#555">Aucun produit</td></tr>';
+      }
+
+      // Recent news
+      const news = OZT.getNews().slice(-5).reverse();
+      const nTable = document.getElementById('recentNewsTable');
+      if (news.length) {
+        nTable.innerHTML = news.map(n => `
+          <tr>
+            <td style="font-weight:600;color:#fff;max-width:200px" class="truncate">${n.title}</td>
+            <td style="color:#888;font-size:0.82rem">${n.date || '-'}</td>
+            <td><span class="badge ${n.published ? 'badge-success' : 'badge-secondary'}">${n.published ? 'Publié' : 'Masqué'}</span></td>
+          </tr>
+        `).join('');
+      } else {
+        nTable.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#555">Aucune actualité</td></tr>';
+      }
+
+      // Chart
+      renderVisitsChart('visitsChart');
+    });
+  </script>
+</body>
+</html>

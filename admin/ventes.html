@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventes Réalisées - Admin OZ Truck Trailer</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../js/data.js"></script>
+  <script src="../js/analytics.js"></script>
+  <script src="../js/admin.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none'">
+        <div class="sidebar-title">OZ Truck Trailer <span>Administration</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+        <a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <div class="sidebar-section">Contenu</div>
+        <a href="produits.html" class="sidebar-link"><i class="fas fa-boxes"></i> Produits</a>
+        <a href="actualites.html" class="sidebar-link"><i class="fas fa-newspaper"></i> Actualités</a>
+        <a href="medias.html" class="sidebar-link"><i class="fas fa-images"></i> Médias</a>
+        <a href="ventes.html" class="sidebar-link active"><i class="fas fa-check-circle"></i> Ventes Réalisées</a>
+        <div class="sidebar-section">Analyse</div>
+        <a href="statistiques.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Statistiques</a>
+        <div class="sidebar-section">Config</div>
+        <a href="parametres.html" class="sidebar-link"><i class="fas fa-cog"></i> Paramètres</a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Administrateur</div>
+            <div class="sidebar-user-role">OZ Truck Trailer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout admin-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-header-left">
+          <button class="admin-toggle" id="adminToggle"><i class="fas fa-bars"></i></button>
+          <span class="admin-page-title">Ventes Réalisées</span>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn btn-primary" onclick="openSaleModal()"><i class="fas fa-plus"></i> Nouvelle vente</button>
+          <button class="header-btn admin-logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title"><i class="fas fa-check-circle"></i> Ventes (<span id="salesCount">0</span>)</div>
+          </div>
+          <div class="admin-card-body" style="padding-bottom:0">
+            <div class="admin-filters">
+              <div class="admin-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher..." id="searchInput" oninput="filterSales()">
+              </div>
+              <select class="admin-select" id="catFilter" onchange="filterSales()">
+                <option value="">Toutes catégories</option>
+                <option value="Matériel TP">Matériel TP</option>
+                <option value="Remorques">Remorques</option>
+                <option value="Poids Lourds">Poids Lourds</option>
+                <option value="Autres">Autres</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Titre</th>
+                  <th>Catégorie</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="salesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="saleModal">
+    <div class="modal" style="max-width:640px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Nouvelle Vente</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="saleId">
+        <div class="form-group">
+          <label class="form-label">Titre *</label>
+          <input type="text" class="form-control" id="saleTitle" placeholder="Ex: HMK 220LC - Entreprise Martin">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="saleDescription" rows="3" placeholder="Description de la vente..."></textarea>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Catégorie</label>
+            <select class="form-control" id="saleCategory">
+              <option value="Matériel TP">Matériel TP</option>
+              <option value="Remorques">Remorques</option>
+              <option value="Poids Lourds">Poids Lourds</option>
+              <option value="Autres">Autres</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date de vente</label>
+            <input type="date" class="form-control" id="saleDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL de l'image</label>
+          <input type="text" class="form-control" id="saleImage" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload image</label>
+          <div class="img-upload-area" id="saleUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Glissez une image ici ou <span>cliquez pour sélectionner</span></p>
+            <input type="file" id="saleUploadInput" accept="image/*" style="display:none">
+          </div>
+          <div class="img-preview-list" id="salePreviewList"></div>
+        </div>
+        <div class="form-group">
+          <div class="toggle-group">
+            <label class="toggle">
+              <input type="checkbox" id="salePublished" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Publier cette vente</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close">Annuler</button>
+        <button class="btn btn-primary" onclick="saveSale()"><i class="fas fa-save"></i> Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    adminCheckAuth();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderTable();
+      initImageUpload('saleUploadArea', 'saleUploadInput', 'salePreviewList', function(base64) {
+        document.getElementById('saleImage').value = base64;
+      });
+      if (window.location.hash === '#new') openSaleModal();
+    });
+
+    function renderTable(items) {
+      const all = items || OZT.getSales();
+      document.getElementById('salesCount').textContent = all.length;
+      const tbody = document.getElementById('salesTable');
+      if (!all.length) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-check-circle"></i><p>Aucune vente réalisée. Cliquez sur "Nouvelle vente".</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = all.map(s => `
+        <tr>
+          <td>${s.image ? `<img src="${s.image}" class="product-thumb" alt="" onerror="this.style.display='none'">` : '<div style="width:50px;height:40px;background:#222;border-radius:6px"></div>'}</td>
+          <td style="font-weight:600;color:#fff;max-width:200px" class="truncate">${s.title}</td>
+          <td><span class="badge badge-info">${s.category || '-'}</span></td>
+          <td style="color:#888;font-size:0.83rem">${s.date || '-'}</td>
+          <td>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" ${s.published ? 'checked' : ''} onchange="toggleSalePublished('${s.id}', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="badge ${s.published ? 'badge-success' : 'badge-secondary'}">${s.published ? 'Publié' : 'Masqué'}</span>
+            </div>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="btn btn-warning btn-icon" onclick="editSale('${s.id}')" title="Modifier"><i class="fas fa-edit"></i></button>
+              <a href="../detail/index.html?id=${s.id}&type=sale" target="_blank" class="btn btn-secondary btn-icon" title="Voir"><i class="fas fa-eye"></i></a>
+              <button class="btn btn-danger btn-icon" onclick="deleteSale('${s.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSales() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('catFilter').value;
+      let items = OZT.getSales();
+      if (q) items = items.filter(s => s.title.toLowerCase().includes(q));
+      if (cat) items = items.filter(s => s.category === cat);
+      renderTable(items);
+    }
+
+    function openSaleModal(sale) {
+      document.getElementById('modalTitle').textContent = sale ? 'Modifier la vente' : 'Nouvelle Vente';
+      document.getElementById('saleId').value = sale ? sale.id : '';
+      document.getElementById('saleTitle').value = sale ? sale.title : '';
+      document.getElementById('saleDescription').value = sale ? (sale.description || '') : '';
+      document.getElementById('saleCategory').value = sale ? (sale.category || 'Matériel TP') : 'Matériel TP';
+      document.getElementById('saleDate').value = sale ? (sale.date || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
+      document.getElementById('saleImage').value = sale ? (sale.image || '') : '';
+      document.getElementById('salePublished').checked = sale ? !!sale.published : true;
+      document.getElementById('salePreviewList').innerHTML = '';
+      openModal('saleModal');
+    }
+
+    function editSale(id) {
+      const s = OZT.getSaleById(id);
+      if (s) openSaleModal(s);
+    }
+
+    function saveSale() {
+      const title = document.getElementById('saleTitle').value.trim();
+      if (!title) { adminToast('Le titre est requis.', 'error'); return; }
+      const uploadImgs = getImagesFromPreview('salePreviewList');
+      const id = document.getElementById('saleId').value || OZT.genId('sale');
+      const sale = {
+        id,
+        title,
+        description: document.getElementById('saleDescription').value.trim(),
+        category: document.getElementById('saleCategory').value,
+        date: document.getElementById('saleDate').value,
+        image: uploadImgs[0] || document.getElementById('saleImage').value.trim(),
+        published: document.getElementById('salePublished').checked
+      };
+      const all = OZT.getSales();
+      const idx = all.findIndex(s => s.id === id);
+      if (idx >= 0) all[idx] = sale; else all.push(sale);
+      OZT.saveSales(all);
+      closeModal('saleModal');
+      renderTable();
+      adminToast(idx >= 0 ? 'Vente modifiée !' : 'Vente ajoutée !', 'success');
+    }
+
+    function toggleSalePublished(id, published) {
+      const all = OZT.getSales();
+      const s = all.find(s => s.id === id);
+      if (s) { s.published = published; OZT.saveSales(all); renderTable(); adminToast(published ? 'Vente publiée.' : 'Vente masquée.', 'success'); }
+    }
+
+    function deleteSale(id) {
+      adminConfirm('Supprimer cette vente ?', function () {
+        OZT.saveSales(OZT.getSales().filter(s => s.id !== id));
+        renderTable();
+        adminToast('Vente supprimée.', 'success');
+      });
+    }
+  </script>
+</body>
+</html>
