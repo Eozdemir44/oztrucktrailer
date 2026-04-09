@@ -1,9 +1,5 @@
 {
-  "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/produits/[categorie]/[souscategorie]/page": "app/produits/[categorie]/[souscategorie]/page.js",
-  "/admin/produits/page": "app/admin/produits/page.js",
-  "/produits/detail/[id]/page": "app/produits/detail/[id]/page.js",
-  "/admin/actualites/page": "app/admin/actualites/page.js",
-  "/admin/parametres/page": "app/admin/parametres/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/produits/page": "app/produits/page.js",
+  "/page": "app/page.js"
 }

@@ -77,7 +77,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-24">
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0">
-              <div className="relative h-60 w-80">
+              <div className="relative h-20 w-60 sm:h-80 sm:w-80 lg:h-80 lg:w-80">
                 <Image
                   src="/logo.png"
                   alt="OZ Truck Trailer TP/BTP"
